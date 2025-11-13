@@ -39,7 +39,12 @@ jobs:
       - name: Push Docker Image to Docker Hub
         run: |
           docker push $DOCKER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG  
-
+          
+      - name: Start Minikube
+        run: |
+          minikube start --driver=docker
+          kubectl cluster-info
+    
       - name: Deploy to Minikube
         run: |
           kubectl apply -f manifests/deployment.yaml
@@ -84,3 +89,12 @@ jobs:
 #       - name: Push Docker Image to ACR
 #         run: |
 #           docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+
+#       - name: Set up AKS context
+#         run: |
+#           az aks get-credentials --resource-group <RESOURCE_GROUP_NAME> --name <AKS_CLUSTER_NAME>
+        
+#       - name: Deploy to AKS
+#         run: |
+#          kubectl apply -f manifests/
+#          kubectl get pods -o wide   
