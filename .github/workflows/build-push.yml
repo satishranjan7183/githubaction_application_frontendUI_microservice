@@ -1,4 +1,4 @@
-name: Build and Push to ACR
+name: Build and Push to ACR/Docker Hub
 
 on:
   workflow_dispatch:  # Isse tum manually GitHub se trigger kar sakte ho
@@ -6,7 +6,8 @@ on:
 permissions:
   id-token: write
   contents: read
-  
+
+# Below Job is related to push our docker image to Docker Hub  
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
@@ -14,32 +15,64 @@ jobs:
     env:
       IMAGE_NAME: todo-ui
       IMAGE_TAG: v4
-      ACR_NAME: devopsinsidersacr235
-      ACR_LOGIN_SERVER: devopsinsidersacr235.azurecr.io
+      DOCKER_USERNAME: satishranjan7183
+      DOCKER_PASSWORD: dckr_pat_0QsRC0sCCobq3d2LUXHYFz8fjiI
+      DOCKER_REGISTRY: docker.io
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Azure Login
-        uses: Azure/login@v2.3.0
-        with:
-          client-id: d21ebd3d-5905-4aec-b680-28f5c40156e7
-          tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
-          subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
-
-      - name: Log in to ACR
+      - name: Log in to Docker Hub
         run: |
-          az acr login --name $ACR_NAME
+          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
       - name: Build Docker Image
         run: |
           docker build -t $IMAGE_NAME:$IMAGE_TAG .
 
-      - name: Tag Docker Image for ACR
+      - name: Tag Docker Image for Docker Hub
         run: |
-          docker tag $IMAGE_NAME:$IMAGE_TAG $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+          docker tag $IMAGE_NAME:$IMAGE_TAG $DOCKER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG
 
-      - name: Push Docker Image to ACR
+      - name: Push Docker Image to Docker Hub
         run: |
-          docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+          docker push $DOCKER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG  
+  
+# Below Job is related to push our docker image to ACR  
+# jobs:
+#   build-and-push:
+#     runs-on: ubuntu-latest
+
+#     env:
+#       IMAGE_NAME: todo-ui
+#       IMAGE_TAG: v4
+#       ACR_NAME: devopsinsidersacr235
+#       ACR_LOGIN_SERVER: devopsinsidersacr235.azurecr.io
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+
+#       - name: Azure Login
+#         uses: Azure/login@v2.3.0
+#         with:
+#           client-id: d21ebd3d-5905-4aec-b680-28f5c40156e7
+#           tenant-id: 8839fa1a-72d2-4f19-8736-4c73cf13d7a6
+#           subscription-id: 38d52de4-2fb6-4a85-96fb-5ba22d363e4e
+
+#       - name: Log in to ACR
+#         run: |
+#           az acr login --name $ACR_NAME
+
+#       - name: Build Docker Image
+#         run: |
+#           docker build -t $IMAGE_NAME:$IMAGE_TAG .
+
+#       - name: Tag Docker Image for ACR
+#         run: |
+#           docker tag $IMAGE_NAME:$IMAGE_TAG $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+
+#       - name: Push Docker Image to ACR
+#         run: |
+#           docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
