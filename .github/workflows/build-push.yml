@@ -16,8 +16,9 @@ jobs:
     env:
       IMAGE_NAME: todo-ui
       IMAGE_TAG: v4
-      ACR_NAME: devopsinsidersacr235
-      ACR_LOGIN_SERVER: devopsinsidersacr235.azurecr.io
+      DOCKER_USERNAME: satishranjan7183
+      DOCKER_PASSWORD: dckr_pat_0QsRC0sCCobq3d2LUXHYFz8fjiI
+      DOCKER_REGISTRY: docker.io
 
     steps:
       - name: Checkout code
