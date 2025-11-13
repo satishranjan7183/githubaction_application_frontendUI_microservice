@@ -16,7 +16,6 @@ jobs:
       IMAGE_NAME: todo-ui
       IMAGE_TAG: v4
       DOCKER_USERNAME: satishranjan7183
-      DOCKER_PASSWORD: dckr_pat_0QsRC0sCCobq3d2LUXHYFz8fjiI
       DOCKER_REGISTRY: docker.io
 
     steps:
