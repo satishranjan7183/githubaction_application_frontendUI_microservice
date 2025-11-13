@@ -39,6 +39,11 @@ jobs:
       - name: Push Docker Image to Docker Hub
         run: |
           docker push $DOCKER_REGISTRY/$DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG  
+
+      - name: Deploy to Minikube
+        run: |
+          kubectl apply -f deployment.yaml
+          kubectl get pods    
   
 # Below Job is related to push our docker image to ACR  
 # jobs:
