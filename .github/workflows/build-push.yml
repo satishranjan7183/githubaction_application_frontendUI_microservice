@@ -51,6 +51,8 @@ jobs:
           kubectl apply -f manifests/service.yaml
           kubectl apply -f manifests/ingress.yaml
           kubectl get pods    
+          kubectl get svc
+          kubectl get ingress
   
 # Below Job is related to push our docker image to ACR  
 # jobs:
